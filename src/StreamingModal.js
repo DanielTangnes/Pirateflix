@@ -27,7 +27,7 @@ function StreamingModal({ magnetURI, closeModal }) {
 
   useEffect(() => {
     // Replace the URL below with your server-side implementation URL.
-    const serverUrl = 'https://your-server-url.com/convert-magnet';
+    const serverUrl = '/convert-magnet';
   
     const convertMagnetToHlsStream = async (magnet) => {
       try {

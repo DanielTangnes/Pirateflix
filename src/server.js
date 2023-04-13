@@ -1,12 +1,12 @@
 const express = require('express');
-const torrentStream = require('torrent-stream');
 const ffmpeg = require('fluent-ffmpeg');
 const MemoryFS = require('memory-fs');
-
+const cors = require('cors');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3005;
 const fs = new MemoryFS();
 
+app.use(cors());
 app.use(express.json());
 
 app.post('/convert-magnet', (req, res) => {
