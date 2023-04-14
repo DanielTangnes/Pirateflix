@@ -5,6 +5,8 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3005;
 const fs = new MemoryFS();
+const torrentStream = require('torrent-stream');
+
 
 app.use(cors());
 app.use(express.json());
@@ -22,8 +24,10 @@ app.post('/convert-magnet', (req, res) => {
     const file = engine.files.find((file) => file.name.endsWith('.mp4'));
 
     if (!file) {
+      console.error('No suitable video file found for magnet:', magnet);
+      console.error('All files in the torrent:', engine.files.map(f => f.name).join(', '));
       return res.status(400).json({ error: 'No suitable video file found' });
-    }
+    }    
 
     const outputPath = '/output.m3u8';
 

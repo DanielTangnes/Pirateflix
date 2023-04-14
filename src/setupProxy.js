@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.use(
     '/convert-magnet',
     createProxyMiddleware({
-      target: 'http://localhost:3005',
+      target: 'http://localhost/',
       changeOrigin: true,
     })
   );
