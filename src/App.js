@@ -1,19 +1,18 @@
-import React, { Fragment } from "react";
+import React from "react";
 import './App.css';
 import Row from "./Row";
 import requests from './requests';
 import Banner from "./Banner";
 import Nav from "./Nav";
-import { BrowserRouter as Router, Switch, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <Router>  
+    <BrowserRouter>  
       <div className="App">
-        <Switch>
-          <Route path="/" exact render={() => 
-            <Fragment>
-              
+        <Routes>
+          <Route path="/" element={
+            <>
               <Nav />
               <Banner />
 
@@ -29,11 +28,11 @@ function App() {
               <Row title="Horror Movies" fetchUrl={requests.fetchHorrorMovies} />
               <Row title="Romance Movies" fetchUrl={requests.fetchRomanceMovies} />
               <Row title="Documentaries" fetchUrl={requests.fetchDocumentaries} />
-            </Fragment>
+            </>
           } />
-        </Switch>
+        </Routes>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 
