@@ -1,0 +1,11 @@
+services:
+  pirateflix:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:4000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+

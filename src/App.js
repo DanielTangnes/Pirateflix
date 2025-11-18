@@ -5,6 +5,7 @@ import requests from './requests';
 import Banner from "./Banner";
 import Nav from "./Nav";
 import { BrowserRouter as Router, Switch, Route, Routes } from 'react-router-dom';
+import Search from "./Search";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
               
               <Nav />
               <Banner />
+              <Search />
 
               <Row 
                 title="Netflix Originals"

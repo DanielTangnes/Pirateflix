@@ -1,35 +1,65 @@
 .row {
-    color: white;
-    margin-left: 20px;
+    color: var(--text);
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
 }
 
 .row__posters {
     display: flex;
     overflow-y: hidden;
     overflow-x: scroll;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 .row__posters::-webkit-scrollbar {
     display: none;
 }
 
+.row__posterWrap {
+    position: relative;
+    display: inline-block;
+}
+
 .row__poster {
     object-fit: contain;
     width: 100%;
-    max-height: 160px;
-    margin-right: 10px;
-    transition: transform 450ms;
+    max-height: 240px;
+    margin-right: 14px;
+    transition: transform 450ms, box-shadow 200ms ease-in-out;
+    border-radius: 6px;
 }
 
 .row__poster:hover {
-    transform: scale(1.08);
+    transform: scale(1.03);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.35);
 }
 
 .row__posterLarge {
-    max-height: 450px;
+    max-height: 520px;
 }
 
 .row__posterLarge:hover {
-    transform: scale(1.09);
+    transform: scale(1.02);
+}
+
+.row__titleOverlay {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.7));
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+    pointer-events: none;
+}
+
+.row__posterWrap:hover .row__titleOverlay {
+    opacity: 1;
 }

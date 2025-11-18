@@ -1,64 +1,40 @@
-import React, { useRef, useEffect } from 'react';
-import Hls from 'hls.js';
+import React, { useEffect, useRef } from 'react';
 import './StreamingModal.css';
 
 function StreamingModal({ magnetURI, closeModal }) {
-  const videoRef = useRef(null);
+  const containerRef = useRef(null);
+  const containerIdRef = useRef(`webtor-player-${Math.random().toString(36).slice(2)}`);
 
-  const loadHlsStream = (hlsStreamUrl) => {
-    if (videoRef.current) {
-      const video = videoRef.current;
-
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(hlsStreamUrl);
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play();
-        });
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = hlsStreamUrl;
-        video.addEventListener('loadedmetadata', () => {
-          video.play();
-        });
-      }
-    }
-  };
-
+  // Load Webtor player script if needed and initialize player
   useEffect(() => {
-    // Replace the URL below with your server-side implementation URL.
-    const serverUrl = 'http://localhost:3005/convert-magnet';
-  
-    const convertMagnetToHlsStream = async (magnet) => {
-      try {
-        const response = await fetch(serverUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ magnet }),
-        });
-  
-        if (response.ok) {
-          const data = await response.json();
-          const hlsStreamUrl = data.hlsStreamUrl;
-          loadHlsStream(hlsStreamUrl);
-        } else {
-          console.error('Error converting magnet to HLS stream URL');
-        }
-      } catch (error) {
-        console.error('Error fetching HLS stream URL:', error);
-      }
+    let cancelled = false;
+    const ensureScript = () =>
+      new Promise((resolve) => {
+        if (window.webtor) return resolve();
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@webtor/player-sdk-js/dist/index.min.js';
+        script.async = true;
+        script.onload = () => resolve();
+        document.body.appendChild(script);
+      });
+
+    ensureScript().then(() => {
+      if (cancelled) return;
+      window.webtor = window.webtor || [];
+      window.webtor.push({
+        id: containerIdRef.current,
+        magnet: magnetURI,
+        title: 'Streaming',
+        app: { theme: 'dark' },
+      });
+    });
+
+    return () => {
+      cancelled = true;
     };
-  
-    convertMagnetToHlsStream(magnetURI);
   }, [magnetURI]);
-  
 
   const closeModalHandler = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
     closeModal();
   };
 
@@ -66,7 +42,11 @@ function StreamingModal({ magnetURI, closeModal }) {
     <div className="streaming-modal">
       <div className="streaming-modal-content">
         <span className="close" onClick={closeModalHandler}>&times;</span>
-        <video ref={videoRef} controls width="100%" height="auto"></video>
+        <div
+          ref={containerRef}
+          id={containerIdRef.current}
+          style={{ width: '100%', height: '100%' }}
+        />
       </div>
     </div>
   );
